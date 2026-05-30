@@ -30,42 +30,76 @@
 
 /* 图片上传 */
 .upload-card {
+  position: relative;
   background: white;
   border-radius: 24rpx;
   overflow: hidden;
   box-shadow: 0 4rpx 20rpx rgba(124, 179, 66, 0.1);
   margin-bottom: 30rpx;
+  /* 占位状态固定高度，避免框跳动 */
+  height: 400rpx;
+}
+
+/* 有图片时让卡片按图片实际高度撑开（preview-image 用 widthFix 等比缩放） */
+.upload-card.has-image {
+  height: auto;
+}
+
+/* 清空图片按钮（叠在预览图右上角） */
+.clear-image-btn {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 56rpx;
+  height: 56rpx;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.clear-image-btn text {
+  color: white;
+  font-size: 40rpx;
+  line-height: 1;
+  font-weight: 300;
 }
 
 .upload-placeholder {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 80rpx 40rpx;
+  padding: 24rpx 40rpx;
   background: #FAFAFA;
   border: 4rpx dashed #E8F5E9;
+  box-sizing: border-box;
 }
 
 .upload-icon {
-  font-size: 80rpx;
-  margin-bottom: 20rpx;
-}
-
-.upload-text {
-  font-size: 30rpx;
-  color: #666;
+  font-size: 60rpx;
+  line-height: 1;
   margin-bottom: 10rpx;
 }
 
+.upload-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 4rpx;
+}
+
 .upload-hint {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: #999;
 }
 
 .preview-image {
   width: 100%;
-  height: 400rpx;
+  display: block;
 }
 
 /* 输入卡片 */
@@ -119,6 +153,61 @@
   font-size: 24rpx;
   color: #999;
   margin-top: 12rpx;
+}
+
+/* 子字段（食材/做法/时长+难度），用淡色分割线区隔 */
+.recipe-subfield {
+  padding-top: 24rpx;
+  margin-top: 24rpx;
+  border-top: 2rpx solid #F0F7EE;
+}
+
+.recipe-subfield:first-of-type {
+  padding-top: 0;
+  margin-top: 0;
+  border-top: none;
+}
+
+.subfield-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.subfield-icon {
+  font-size: 30rpx;
+  margin-right: 10rpx;
+}
+
+.subfield-text {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.subfield-hint {
+  margin-left: 10rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.recipe-inline-row {
+  display: flex;
+  gap: 32rpx;
+}
+
+.recipe-inline-field {
+  flex: 1;
+}
+
+/* 菜谱 textarea */
+.recipe-textarea {
+  width: 100%;
+  font-size: 30rpx;
+  color: #333;
+  line-height: 1.6;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* 分类选择器 */

@@ -28,6 +28,52 @@
     </view>
   </view>
 
+  <!-- 菜谱区 -->
+  <view class="recipe-card" wx:if="{{dish.ingredients || dish.steps}}">
+    <view class="recipe-header">
+      <view class="recipe-title-wrap">
+        <text class="recipe-title">菜谱</text>
+      </view>
+      <view class="recipe-edit-chip" bindtap="editRecipeManual">
+        <text>✏️ 编辑</text>
+      </view>
+    </view>
+
+    <view class="recipe-meta" wx:if="{{dish.cookTime || dish.difficulty}}">
+      <text class="meta-item" wx:if="{{dish.cookTime}}">⏱ {{dish.cookTime}}</text>
+      <text class="meta-item" wx:if="{{dish.difficulty}}">🌶 {{dish.difficulty}}</text>
+    </view>
+
+    <view class="recipe-section" wx:if="{{dish.ingredients}}">
+      <view class="recipe-section-title">🥬 食材</view>
+      <view class="recipe-section-body">{{dish.ingredients}}</view>
+    </view>
+
+    <view class="recipe-section" wx:if="{{dish.steps}}">
+      <view class="recipe-section-title">👩‍🍳 做法</view>
+      <view class="recipe-section-body">{{dish.steps}}</view>
+    </view>
+  </view>
+
+  <!-- 没有菜谱：空状态卡片 -->
+  <view class="recipe-card recipe-empty-card" wx:else>
+    <view class="recipe-header">
+      <view class="recipe-title-wrap">
+        <text class="recipe-title">菜谱</text>
+      </view>
+    </view>
+    <view class="empty-body">
+      <text class="empty-icon">📝</text>
+      <text class="empty-title">还没有菜谱</text>
+      <text class="empty-hint">写一份做法，下次做更方便</text>
+    </view>
+    <view class="empty-actions">
+      <view class="empty-action" bindtap="editRecipeManual">
+        <text>写菜谱</text>
+      </view>
+    </view>
+  </view>
+
   <!-- 操作按钮 -->
   <view class="action-buttons">
     <view class="btn-edit" bindtap="editDish">

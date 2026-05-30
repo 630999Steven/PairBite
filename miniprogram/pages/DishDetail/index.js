@@ -53,10 +53,6 @@ Page({
       }
 
       const dish = res.result.data
-      if (dish.imageUrl) {
-        const urlMap = await app.getTempFileURLs([dish.imageUrl])
-        dish.imageUrl = urlMap[dish.imageUrl] || dish.imageUrl
-      }
       this.setData({
         dish,
         dateText: this.formatDate(dish.createTime),
@@ -92,6 +88,13 @@ Page({
   editDish() {
     wx.navigateTo({
       url: `/pages/DishAdd/index?id=${this.data._id}`
+    })
+  },
+
+  // 填写/编辑菜谱
+  editRecipeManual() {
+    wx.navigateTo({
+      url: `/pages/RecipeEdit/index?id=${this.data._id}`
     })
   },
 

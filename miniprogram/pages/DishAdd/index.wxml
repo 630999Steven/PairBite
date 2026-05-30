@@ -8,12 +8,16 @@
   <!-- 表单区域 -->
   <view class="form-section">
     <!-- 图片上传 -->
-    <view class="upload-card" bindtap="chooseImage">
-      <image wx:if="{{imageUrl}}" class="preview-image" src="{{imageUrl}}" mode="aspectFill"></image>
+    <view class="upload-card {{imageUrl ? 'has-image' : ''}}" bindtap="chooseImage">
+      <image wx:if="{{imageUrl}}" class="preview-image" src="{{imageUrl}}" mode="widthFix"></image>
       <view wx:else class="upload-placeholder">
         <text class="upload-icon">📷</text>
         <text class="upload-text">点击上传菜品图片</text>
         <text class="upload-hint">支持从相册选择或拍照</text>
+      </view>
+      <!-- 清空图片：有图时显示在右上角 -->
+      <view class="clear-image-btn" wx:if="{{imageUrl}}" catchtap="clearImage">
+        <text>×</text>
       </view>
     </view>
 
@@ -54,6 +58,68 @@
              placeholderClass="input-placeholder"
              bindinput="onDescInput" value="{{description}}" />
       <text class="input-counter">{{description.length}}/6</text>
+    </view>
+
+    <!-- 菜谱（合到一张卡，跟其他字段卡片一致） -->
+    <view class="input-card">
+      <view class="input-label">
+        <text class="label-icon">📖</text>
+        <text class="label-text">菜谱</text>
+        <text class="label-optional">（选填）</text>
+      </view>
+
+      <view class="recipe-subfield">
+        <view class="subfield-label">
+          <text class="subfield-icon">🥬</text>
+          <text class="subfield-text">食材</text>
+          <text class="subfield-hint">每行一项</text>
+        </view>
+        <textarea class="recipe-textarea" placeholder="例如：鸡蛋 2 个、番茄 1 个、生抽 1 勺"
+                  placeholder-class="input-placeholder"
+                  style="height: {{ingredientsHeight}}rpx"
+                  bindinput="onIngredientsInput" value="{{ingredients}}"
+                  disable-default-padding maxlength="-1" />
+      </view>
+
+      <view class="recipe-subfield">
+        <view class="subfield-label">
+          <text class="subfield-icon">👩‍🍳</text>
+          <text class="subfield-text">做法</text>
+          <text class="subfield-hint">每行一步</text>
+        </view>
+        <textarea class="recipe-textarea" placeholder="例如：1. 番茄切块 2. 鸡蛋打散 3. 油锅炒蛋"
+                  placeholder-class="input-placeholder"
+                  style="height: {{stepsHeight}}rpx"
+                  bindinput="onStepsInput" value="{{steps}}"
+                  disable-default-padding maxlength="-1" />
+      </view>
+
+      <view class="recipe-subfield recipe-inline-row">
+        <view class="recipe-inline-field">
+          <view class="subfield-label">
+            <text class="subfield-icon">⏱</text>
+            <text class="subfield-text">时长</text>
+          </view>
+          <picker mode="selector" range="{{cookTimeOptions}}" range-key="label" value="{{cookTimeIndex}}" bindchange="onCookTimeChange">
+            <view class="picker-value">
+              <text>{{cookTime}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+        <view class="recipe-inline-field">
+          <view class="subfield-label">
+            <text class="subfield-icon">🌶</text>
+            <text class="subfield-text">难度</text>
+          </view>
+          <picker mode="selector" range="{{difficultyOptions}}" value="{{difficultyIndex}}" bindchange="onDifficultyChange">
+            <view class="picker-value">
+              <text>{{difficulty}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
     </view>
   </view>
 
