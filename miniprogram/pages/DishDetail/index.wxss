@@ -100,3 +100,125 @@
   color: #E57373;
   font-weight: 500;
 }
+
+/* 菜谱卡片（已有菜谱） */
+.recipe-card {
+  margin: 0 24rpx 24rpx;
+  padding: 40rpx;
+  background: white;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 40rpx rgba(124, 179, 66, 0.15);
+}
+
+.recipe-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.recipe-title-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.recipe-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.recipe-edit-chip {
+  padding: 8rpx 20rpx;
+  background: #F5F9F0;
+  border-radius: 28rpx;
+}
+
+.recipe-edit-chip text {
+  font-size: 24rpx;
+  color: #6FCF97;
+}
+
+.recipe-meta {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 24rpx;
+  padding-bottom: 24rpx;
+  border-bottom: 2rpx solid #F5F9F0;
+}
+
+.meta-item {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.recipe-section {
+  margin-bottom: 24rpx;
+}
+
+.recipe-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.recipe-section-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 12rpx;
+}
+
+.recipe-section-body {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+/* 空状态卡片（复用 .recipe-card 基底，只加内部样式） */
+.recipe-empty-card .recipe-header {
+  margin-bottom: 0;
+}
+
+.empty-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24rpx 0 32rpx;
+}
+
+.empty-icon {
+  font-size: 64rpx;
+  line-height: 1;
+  margin-bottom: 12rpx;
+}
+
+.empty-title {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.empty-hint {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.empty-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.empty-action {
+  padding: 20rpx 72rpx;
+  background: linear-gradient(135deg, #6FCF97 0%, #5AC476 100%);
+  border-radius: 50rpx;
+  box-shadow: 0 4rpx 16rpx rgba(111, 207, 151, 0.25);
+}
+
+.empty-action text {
+  font-size: 28rpx;
+  color: white;
+  font-weight: 500;
+}

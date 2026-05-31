@@ -1,4 +1,11 @@
 const app = getApp()
+const {
+  DIFFICULTY_OPTIONS,
+  COOK_TIME_OPTIONS,
+  DEFAULT_COOK_TIME_INDEX,
+  matchCookTimeIndex,
+  estimateHeight,
+} = require('../../utils/recipe.js')
 
 Page({
   data: {
@@ -11,6 +18,18 @@ Page({
     categories: [],
     categoryIndex: 0,
     saving: false,
+
+    // 菜谱字段（可选填）
+    ingredients: '',
+    steps: '',
+    cookTime: COOK_TIME_OPTIONS[DEFAULT_COOK_TIME_INDEX].label,
+    cookTimeOptions: COOK_TIME_OPTIONS,
+    cookTimeIndex: DEFAULT_COOK_TIME_INDEX,
+    difficulty: '简单',
+    difficultyOptions: DIFFICULTY_OPTIONS,
+    difficultyIndex: 0,
+    ingredientsHeight: 80,
+    stepsHeight: 80,
   },
 
   async onLoad(options) {
@@ -19,11 +38,7 @@ Page({
     if (options.id) {
       this.setData({ _id: options.id, isEdit: true })
       wx.setNavigationBarTitle({ title: '编辑菜品' })
-    }
-  },
-
-  async onShow() {
-    if (this.data.isEdit && this.data._id) {
+      // 编辑模式直接在 onLoad 里把字段回填，避免 onShow 早于 onLoad 完成的竞态
       await this.loadDish()
     }
   },
@@ -45,18 +60,23 @@ Page({
 
       const dish = res.result.data
       const categoryIndex = this.data.categories.findIndex(c => c._id === dish.category) || 0
-      // 保留原始 fileID 用于保存，转换临时链接用于展示
-      let displayUrl = dish.imageUrl || ''
-      this._rawImageUrl = dish.imageUrl || ''
-      if (displayUrl.startsWith('cloud://')) {
-        const urlMap = await app.getTempFileURLs([displayUrl])
-        displayUrl = urlMap[displayUrl] || displayUrl
-      }
+      const difficulty = dish.difficulty && DIFFICULTY_OPTIONS.includes(dish.difficulty)
+        ? dish.difficulty
+        : '简单'
+      const cookTimeIndex = matchCookTimeIndex(dish.cookTime)
       this.setData({
         name: dish.name,
         description: dish.description || '',
-        imageUrl: displayUrl,
-        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0
+        imageUrl: dish.imageUrl || '',
+        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
+        ingredients: dish.ingredients || '',
+        steps: dish.steps || '',
+        cookTime: COOK_TIME_OPTIONS[cookTimeIndex].label,
+        cookTimeIndex,
+        difficulty,
+        difficultyIndex: DIFFICULTY_OPTIONS.indexOf(difficulty),
+        ingredientsHeight: estimateHeight(dish.ingredients),
+        stepsHeight: estimateHeight(dish.steps),
       })
     } catch (e) {
       console.error('加载菜品失败', e)
@@ -83,6 +103,29 @@ Page({
   // 选择分类
   onCategoryChange(e) {
     this.setData({ categoryIndex: e.detail.value })
+  },
+
+  // 菜谱字段输入
+  onIngredientsInput(e) {
+    const v = e.detail.value
+    this.setData({ ingredients: v, ingredientsHeight: estimateHeight(v) })
+  },
+  onStepsInput(e) {
+    const v = e.detail.value
+    this.setData({ steps: v, stepsHeight: estimateHeight(v) })
+  },
+  onDifficultyChange(e) {
+    const idx = Number(e.detail.value)
+    this.setData({ difficultyIndex: idx, difficulty: DIFFICULTY_OPTIONS[idx] })
+  },
+  onCookTimeChange(e) {
+    const idx = Number(e.detail.value)
+    this.setData({ cookTimeIndex: idx, cookTime: COOK_TIME_OPTIONS[idx].label })
+  },
+
+  // 清空已选的图片
+  clearImage() {
+    this.setData({ imageUrl: '', tempFilePath: '' })
   },
 
   // 选择图片
@@ -139,7 +182,7 @@ Page({
     wx.showLoading({ title: '保存中...' })
 
     try {
-      let imageUrl = this._rawImageUrl || this.data.imageUrl
+      let imageUrl = this.data.imageUrl
 
       // 如果有新选择的图片，上传新图片
       if (this.data.tempFilePath) {
@@ -150,6 +193,19 @@ Page({
 
       const category = this.data.categories[this.data.categoryIndex]._id
 
+      // 菜谱字段：有食材或步骤就视为填了；否则各字段写空，避免默认值污染
+      const hasRecipe = !!(this.data.ingredients.trim() || this.data.steps.trim())
+      const baseData = {
+        name: name.trim(),
+        description: this.data.description.trim(),
+        imageUrl,
+        category,
+        ingredients: hasRecipe ? this.data.ingredients.trim() : '',
+        steps: hasRecipe ? this.data.steps.trim() : '',
+        cookTime: hasRecipe ? this.data.cookTime : '',
+        difficulty: hasRecipe ? this.data.difficulty : '',
+      }
+
       if (isEdit) {
         // 编辑模式：更新现有记录
         const res = await wx.cloud.callFunction({
@@ -158,13 +214,7 @@ Page({
             collection: app.globalData.collectionDishList,
             docId: _id,
             action: 'update',
-            data: {
-              name: name.trim(),
-              description: this.data.description.trim(),
-              imageUrl,
-              category,
-              updateTime: new Date(),
-            }
+            data: { ...baseData, updateTime: new Date() }
           }
         })
 
@@ -181,10 +231,7 @@ Page({
         const coupleId = app.globalData.currentUser?.coupleId || ''
         await db.collection(app.globalData.collectionDishList).add({
           data: {
-            name: name.trim(),
-            description: this.data.description.trim(),
-            imageUrl,
-            category,
+            ...baseData,
             coupleId,
             createTime: db.serverDate(),
           }
@@ -212,7 +259,15 @@ Page({
       description: '',
       imageUrl: '',
       tempFilePath: '',
-      categoryIndex: 0
+      categoryIndex: 0,
+      ingredients: '',
+      steps: '',
+      cookTime: COOK_TIME_OPTIONS[DEFAULT_COOK_TIME_INDEX].label,
+      cookTimeIndex: DEFAULT_COOK_TIME_INDEX,
+      difficulty: '简单',
+      difficultyIndex: 0,
+      ingredientsHeight: 80,
+      stepsHeight: 80,
     })
   },
 })

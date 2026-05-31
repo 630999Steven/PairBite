@@ -1,0 +1,76 @@
+<view class="container">
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <text class="page-title">{{dishName || '菜谱'}}</text>
+    <text class="page-subtitle">写下家里的私房做法</text>
+  </view>
+
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <!-- 食材 -->
+    <view class="input-card">
+      <view class="input-label">
+        <text class="label-icon">🥬</text>
+        <text class="label-text">食材</text>
+        <text class="label-optional">（每行一项）</text>
+      </view>
+      <textarea class="input-textarea" placeholder="例如：鸡蛋 2 个、番茄 1 个、生抽 1 勺（每行一项）"
+                placeholder-class="input-placeholder"
+                style="height: {{ingredientsHeight}}rpx"
+                bindinput="onIngredientsInput" value="{{ingredients}}"
+                disable-default-padding maxlength="-1" />
+    </view>
+
+    <!-- 步骤 -->
+    <view class="input-card">
+      <view class="input-label">
+        <text class="label-icon">👩‍🍳</text>
+        <text class="label-text">做法</text>
+        <text class="label-optional">（每行一步）</text>
+      </view>
+      <textarea class="input-textarea" placeholder="例如：1. 番茄切块 2. 鸡蛋打散 3. 油锅炒蛋（每行一步）"
+                placeholder-class="input-placeholder"
+                style="height: {{stepsHeight}}rpx"
+                bindinput="onStepsInput" value="{{steps}}"
+                disable-default-padding maxlength="-1" />
+    </view>
+
+    <!-- 时间 + 难度 同一行 -->
+    <view class="input-row">
+      <view class="input-card half">
+        <view class="input-label">
+          <text class="label-icon">⏱</text>
+          <text class="label-text">时长</text>
+        </view>
+        <picker mode="selector" range="{{cookTimeOptions}}" range-key="label" value="{{cookTimeIndex}}" bindchange="onCookTimeChange">
+          <view class="picker-value">
+            <text>{{cookTime}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <view class="input-card half">
+        <view class="input-label">
+          <text class="label-icon">🌶</text>
+          <text class="label-text">难度</text>
+        </view>
+        <picker mode="selector" range="{{difficultyOptions}}" value="{{difficultyIndex}}" bindchange="onDifficultyChange">
+          <view class="picker-value">
+            <text>{{difficulty}}</text>
+            <text class="picker-arrow">›</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <view class="btn-save {{saving ? 'btn-disabled' : ''}}" bindtap="save">
+      <text>{{saving ? '保存中...' : '保存菜谱'}}</text>
+    </view>
+  </view>
+</view>
+<bind-guard />

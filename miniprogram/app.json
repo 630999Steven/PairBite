@@ -4,6 +4,7 @@
     "pages/Dishes/index",
     "pages/DishAdd/index",
     "pages/DishDetail/index",
+    "pages/RecipeEdit/index",
     "pages/Order/index",
     "pages/OrderHistory/index",
     "pages/OrderDetail/index",
